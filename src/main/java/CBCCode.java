@@ -19,12 +19,8 @@ public class CBCCode {
 
 
         String encoded = Base64.getEncoder().encodeToString(encrypted);
-        /*
-        FileWriter writer = new FileWriter(outputFile);
-        writer.write(encoded);
-        writer.close();
+        
 
-         */
         try {
             FileWriter writer = new FileWriter(outputFile);
             writer.write(encoded);
