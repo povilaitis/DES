@@ -3,7 +3,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-public class ECBMode {
+public class ECBCode {
 
     private static final String ALGORITHM = "DES";
     private static final String TRANSFORMATION = "DES/ECB/PKCS5Padding";

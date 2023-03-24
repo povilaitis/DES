@@ -5,18 +5,18 @@ import java.awt.event.ActionListener;
 
 public class Main extends JFrame implements ActionListener {
 
-    private final JTextField plaintextField = new JTextField(20);
+    private final JTextField messagetextField = new JTextField(20);
     private final JTextField keyField = new JTextField(20);
-    private final JTextField ciphertextField = new JTextField(20);
+    private final JTextField encryptedtextField = new JTextField(20);
     private final JTextField decryptedtextField = new JTextField(20);
     private final JComboBox<String> modeComboBox = new JComboBox<>(new String[]{"ECB", "CBC", "CFB", "OFB"});
 
     public Main() {
         super("DES Encryption and Decryption");
 
-        JLabel plaintextLabel = new JLabel("Plaintext:");
+        JLabel messageLabel = new JLabel("Plaintext:");
         JLabel keyLabel = new JLabel("Key:");
-        JLabel ciphertextLabel = new JLabel("Ciphertext:");
+        JLabel encyptedtextLabel = new JLabel("Ciphertext:");
         JLabel decryptedLabel = new JLabel("Decrypted Text:");
         JLabel modeLabel = new JLabel("Encryption Mode:");
 
@@ -27,16 +27,16 @@ public class Main extends JFrame implements ActionListener {
         decryptButton.addActionListener(this);
 
         JPanel inputPanel = new JPanel(new GridLayout(3, 2, 5, 5));
-        inputPanel.add(plaintextLabel);
-        inputPanel.add(plaintextField);
+        inputPanel.add(messageLabel);
+        inputPanel.add(messagetextField);
         inputPanel.add(keyLabel);
         inputPanel.add(keyField);
         inputPanel.add(modeLabel);
         inputPanel.add(modeComboBox);
 
         JPanel outputPanel = new JPanel(new GridLayout(2, 2, 5, 5));
-        outputPanel.add(ciphertextLabel);
-        outputPanel.add(ciphertextField);
+        outputPanel.add(encyptedtextLabel);
+        outputPanel.add(encryptedtextField);
         outputPanel.add(decryptedLabel);
         outputPanel.add(decryptedtextField);
 
@@ -62,7 +62,7 @@ public class Main extends JFrame implements ActionListener {
         try {
             String key = keyField.getText();
             String iv = "00000000";  //visada esantis
-            String plaintext = plaintextField.getText();
+            String plaintext = messagetextField.getText();
             String mode = (String) modeComboBox.getSelectedItem();
 
             if (e.getActionCommand().equals("Encrypt")) {
@@ -72,37 +72,39 @@ public class Main extends JFrame implements ActionListener {
 
                 switch (mode) {
                     case "ECB":
-                        ciphertext = ECBMode.encrypt(plaintext, key);
+                        ciphertext = ECBCode.encrypt(plaintext, key);
                         break;
                     case "CBC":
-                        ciphertext = CBCMode.encrypt(plaintext, key, iv);
+                        ciphertext = CBCCode.encrypt(plaintext, key, iv, "output.txt");
                         break;
                     case "CFB":
-                        // call CFB encryption method here
+                        ciphertext = CFBCode.encrypt(plaintext, key , iv);
                         break;
                     case "OFB":
                         // call OFB encryption method here
                         break;
+
                 }
-                ciphertextField.setText(ciphertext);
+                encryptedtextField.setText(ciphertext);
             } else if (e.getActionCommand().equals("Decrypt")) {
 
-                String ciphertext = ciphertextField.getText();
+                String ciphertext = encryptedtextField.getText();
                 String decrypted = "";
 
                 switch (mode) {
                     case "ECB":
-                        decrypted = ECBMode.decrypt(ciphertext, key);
+                        decrypted = ECBCode.decrypt(ciphertext, key);
                         break;
                     case "CBC":
-                        decrypted = CBCMode.decrypt(ciphertext, key, iv);
+                        decrypted = CBCCode.decrypt(ciphertext, key, iv, "output.txt");
                         break;
                     case "CFB":
-                        // call CFB decryption method here
+                        decrypted = CFBCode.decrypt(ciphertext, key, iv);
                         break;
                     case "OFB":
-                        // call OFB decryption method here
+
                         break;
+
                 }
 
                 decryptedtextField.setText(decrypted);
@@ -110,13 +112,11 @@ public class Main extends JFrame implements ActionListener {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error during encryption: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
-
-
         }
-    }
-    public static void main (String[]args){
+    }  public static void main (String[]args){
         SwingUtilities.invokeLater(() -> new Main().setVisible(true));
     }
+
 }
 
 

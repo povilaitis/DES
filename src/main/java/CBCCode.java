@@ -1,25 +1,42 @@
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Base64;
 
-public class CBCMode {
+public class CBCCode {
 
     private static final String ALGORITHM = "DES";
     private static final String TRANSFORMATION = "DES/CBC/PKCS5Padding";
 
-    public static String encrypt(String plaintext, String key, String iv) throws Exception {
+    public static String encrypt(String plaintext, String key, String iv, String outputFile) throws Exception {
         SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), ALGORITHM);
         IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
-
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
-
         byte[] encrypted = cipher.doFinal(plaintext.getBytes());
+
+
+        String encoded = Base64.getEncoder().encodeToString(encrypted);
+        /*
+        FileWriter writer = new FileWriter(outputFile);
+        writer.write(encoded);
+        writer.close();
+
+         */
+        try {
+            FileWriter writer = new FileWriter(outputFile);
+            writer.write(encoded);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return bytesToHex(encrypted);
     }
 
-    public static String decrypt(String ciphertext, String key, String iv) throws Exception {
+    public static String decrypt(String ciphertext, String key, String iv, String outputFile) throws Exception {
         SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), ALGORITHM);
         IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
 
@@ -27,6 +44,10 @@ public class CBCMode {
         cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
 
         byte[] decrypted = cipher.doFinal(hexToBytes(ciphertext));
+
+        FileWriter writer = new FileWriter(outputFile);
+        writer.write(new String(decrypted, "UTF-8"));
+        writer.close();
 
         return new String(decrypted);
     }
