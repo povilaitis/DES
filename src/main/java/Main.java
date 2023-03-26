@@ -81,7 +81,7 @@ public class Main extends JFrame implements ActionListener {
                         ciphertext = CFBCode.encrypt(plaintext, key , iv);
                         break;
                     case "OFB":
-                        // call OFB encryption method here
+                    
                         break;
 
                 }
